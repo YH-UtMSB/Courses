@@ -102,13 +102,13 @@ for (h in Bw) {
 }
 ```
 
-    ## squared error for h =  0.125 :  4432.8 
-    ## squared error for h =  0.25 :  4588.64 
-    ## squared error for h =  0.5 :  6353.88 
-    ## squared error for h =  0.75 :  12165.59 
-    ## squared error for h =  1 :  19636.81 
-    ## squared error for h =  2 :  46429.31 
-    ## squared error for h =  4 :  64791.75
+    ## squared error for h =  0.125 :  17296.98 
+    ## squared error for h =  0.25 :  17350.43 
+    ## squared error for h =  0.5 :  18240.42 
+    ## squared error for h =  0.75 :  25171.07 
+    ## squared error for h =  1 :  42128.74 
+    ## squared error for h =  2 :  94896.93 
+    ## squared error for h =  4 :  128215.2
 
 ``` r
 h.optimal = Bw[which.min(err)]

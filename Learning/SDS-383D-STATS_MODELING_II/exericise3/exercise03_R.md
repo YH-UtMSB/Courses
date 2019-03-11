@@ -102,13 +102,13 @@ for (h in Bw) {
 }
 ```
 
-    ## squared error for h =  0.125 :  36162.84 
-    ## squared error for h =  0.25 :  36184.99 
-    ## squared error for h =  0.5 :  37234.64 
-    ## squared error for h =  0.75 :  43674.41 
-    ## squared error for h =  1 :  61157.82 
-    ## squared error for h =  2 :  136171.5 
-    ## squared error for h =  4 :  184254.3
+    ## squared error for h =  0.125 :  4432.8 
+    ## squared error for h =  0.25 :  4588.64 
+    ## squared error for h =  0.5 :  6353.88 
+    ## squared error for h =  0.75 :  12165.59 
+    ## squared error for h =  1 :  19636.81 
+    ## squared error for h =  2 :  46429.31 
+    ## squared error for h =  4 :  64791.75
 
 ``` r
 h.optimal = Bw[which.min(err)]
@@ -175,7 +175,7 @@ h_solver = function(x.tr, y.tr, x.te, y.te, grp="wn"){
   h.optimal = Bw[which.min(err)]
   y.eval = Y.eval[,which.min(err)]
   
-  plot(x.te, y.te, main = paste0(grp, ", h = ", h))
+  plot(x.te, y.te, main = paste0(grp, ", h = ", h.optimal))
   points(x.te, y.eval, col = "red")
   
 }

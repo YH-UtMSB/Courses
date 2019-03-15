@@ -216,3 +216,5 @@ par(mfrow=c(1,1))
   \end{array}
   \right]
   \]
+  
+  *\Omega*

@@ -102,13 +102,13 @@ for (h in Bw) {
 }
 ```
 
-    ## squared error for h =  0.125 :  17296.98 
-    ## squared error for h =  0.25 :  17350.43 
-    ## squared error for h =  0.5 :  18240.42 
-    ## squared error for h =  0.75 :  25171.07 
-    ## squared error for h =  1 :  42128.74 
-    ## squared error for h =  2 :  94896.93 
-    ## squared error for h =  4 :  128215.2
+    ## squared error for h =  0.125 :  62.06 
+    ## squared error for h =  0.25 :  128.68 
+    ## squared error for h =  0.5 :  299.95 
+    ## squared error for h =  0.75 :  1237.44 
+    ## squared error for h =  1 :  3139.19 
+    ## squared error for h =  2 :  11416.42 
+    ## squared error for h =  4 :  17942.89
 
 ``` r
 h.optimal = Bw[which.min(err)]
@@ -151,9 +151,14 @@ y.wn = resp.w + e.n; y.wo = resp.w + e.o; y.on = resp.o + e.n; y.oo = resp.o + e
 
 
 h_solver = function(x.tr, y.tr, x.te, y.te, grp="wn"){
+  # the h_solver function estimates the best option for bandwidth 
+  # (from given proposals) by picking out the h that gives the optimal
+  # performance in the test set
   
+  # these vectors will record test error and estimated y's respectively
   err = c()
   Y.eval = c()
+  
   for (h in Bw) {
     
     # compute weights; weights are stored in matrix W
@@ -205,5 +210,13 @@ h_solver(x.tr, y.oo.tr, x.te, y.oo.te, grp = "oo")
 par(mfrow=c(1,1))
 ```
 
+### Local polynomial regression -- part (E) & (F) & (G)
 
+*(E)* The problem requires us to choose the best bandwidth *h* (from a set of proposals) of local linear estimator using LOOCV. By what we already know about local linear estimator and leave-one-out cross validation, we need 4 steps to make that happen:
 
+1.  calculating the weight matrix *Ω* such that
+2.  normalize *Ω* by row (get the Hat Matrix *H*),
+3.  calculate LOOCV,
+4.  find the bandwidth *h* that gives minimal LOOCV error.
+
+The optimal bandwidth turned out to be around 6.87

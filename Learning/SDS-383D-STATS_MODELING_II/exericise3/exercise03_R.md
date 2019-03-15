@@ -210,12 +210,15 @@ h_solver(x.tr, y.oo.tr, x.te, y.oo.te, grp = "oo")
 par(mfrow=c(1,1))
 ```
 
-### Local polynomial regression -- part (E) & (F) & (G)
+### Local polynomial regression -- part (E) & (F)
 
 *(E)* & *(F)* The problem requires us to choose the best bandwidth *h* (from a set of proposals) of local linear estimator using LOOCV. By what we already know about local linear estimator and leave-one-out cross validation, we need 4 steps to make that happen:
 
 1.  calculating the weight matrix *Ω* such that
+
 ![](exercise03_R_files/figure-markdown_github/my-omega.PNG)
+
+
 2.  normalize *Ω* by row (get the Hat Matrix *H*),
 3.  calculate LOOCV,
 4.  find the bandwidth *h* that gives minimal LOOCV error.
@@ -380,6 +383,8 @@ bw = bw_solver(0, 8, .01)
 
 ![](exercise03_R_files/figure-markdown_github/unnamed-chunk-4-1.jpeg)
 
+The optimal bandwidth turned out to be around 6.87.
+
 ```r
 y.hat = Hat.func(bw) %*% data.y
 resid = data.y - y.hat
@@ -388,5 +393,6 @@ plot(data.x, resid, main = "residual plot")
 ```
 ![](exercise03_R_files/figure-markdown_github/unnamed-chunk-4-2.jpeg)
 
+The residual looks not totally independent with the explanatory variable.
 
-The optimal bandwidth turned out to be around 6.87
+

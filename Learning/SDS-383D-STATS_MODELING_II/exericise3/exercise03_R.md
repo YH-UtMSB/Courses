@@ -207,7 +207,7 @@ par(mfrow=c(1,1))
 
 ### Local polynomial regression
 
-```math
+\[
 \Omega = \left[\begin{array}{cccc}
   w_1(\textbf{x}_1) & w_2(\textbf{x}_1) & \cdots & w_n(\textbf{x}_1) \\
   w_1(\textbf{x}_2) & w_2(\textbf{x}_2) & \cdots & w_n(\textbf{x}_2) \\
@@ -215,4 +215,4 @@ par(mfrow=c(1,1))
   w_1(\textbf{x}_n) & w_2(\textbf{x}_n) & \cdots & w_n(\textbf{x}_n)
   \end{array}
   \right]
-  ```
+  \]

@@ -219,4 +219,173 @@ par(mfrow=c(1,1))
 3.  calculate LOOCV,
 4.  find the bandwidth *h* that gives minimal LOOCV error.
 
+```r
+library(readr)
+
+# prepare dataset
+utilities = read_csv("E:/R/utilities.csv")
+data.x = utilities$temp; data.y = utilities$gasbill / utilities$billingdays
+
+
+s.func = function(x, j, h){
+  
+  # This function computes s_j(x) defined in 
+  # ex03-local polynomial regression - part(B)
+  
+  d = (data.x - x) / h
+  ker = dnorm(d, 0, 1)
+  s.j = ker %*% (data.x - x)^j
+  
+  return(s.j)
+}
+
+
+w.func = function(x, h){
+  
+  # 1. This function computes w(x) = [w1(x), w2(x), ..., wn(x)]
+  # 2. wi(x), i = 1,2,...,n is defined in 
+  #    ex03-local polynomial regression - part(B)
+  
+  d = (data.x - x) / h
+  ker = dnorm(d, 0, 1)
+  s.part = s.func(x, 2, h) - (data.x - x) * s.func(x, 1, h)
+  
+  # compute weights
+  w.x = ker * s.part
+  
+  # normalize weights
+  w.x = w.x / sum(w.x)
+  
+  return(w.x)
+}
+
+
+
+Hat.func = function(bw){
+  
+  H.T = sapply(data.x, function(x) w.func(x, h=bw))
+  H = t(H.T)
+  
+  return(H)
+}
+
+
+
+LOOCV = function(bw){
+  
+  # 1. This function calculates the LOOCV error for local linear estimator
+  #    on the dataset(data.x, data.y) 
+  # 2. Uses a gaussian kernel with bandwidth bw.
+  
+  # Compute the diagonal elements of Hat matrix H.
+  H = Hat.func(bw)
+  dH = H[row(H) == col(H)]
+  
+  check.value = sum(dH)
+  
+  # computes y.hat
+  y.hat = H %*% data.y
+  
+  # computes LOOCV by the equation in
+  # ex03 - cross validation - part (C)
+  loocv = sum( ((data.y - y.hat)/(1 - dH))^2 )
+  
+  results = list(
+    "loocv" = loocv / length(data.y),
+    "ckval" = check.value
+  )
+  
+  return(results)
+}
+
+
+
+bw_select = function(Bw){
+  
+  # Select optimal bw from proposed Bw
+  # in terms of minimum loocv error.
+  
+  cv.err = c()
+  for (bw in Bw) {
+    loocv_err = LOOCV(bw)$loocv
+    cv.err = c(cv.err, loocv_err)
+  }
+  
+  h.o.idx = which.min(cv.err)
+  h.optimal = Bw[h.o.idx]
+  
+  results = list(
+    "h.o.idx" = h.o.idx,
+    "h.optimal" = h.optimal,
+    "err" = cv.err
+  )
+  
+  return(results)
+}
+
+
+
+bw_solver = function(bw.lb, bw.ub, precision){
+  
+  # binary search for optimal bandwidth within [bw.lb, bw.ub],
+  # with precision no lower than the specified "precision".
+  
+  curr.prec = .1
+  curr.lb = bw.lb; curr.ub = bw.ub
+  
+  Bw = cv.err = c()
+  
+  repeat{
+    
+    curr.Bw = seq(curr.lb, curr.ub, curr.prec)
+    N = length(curr.Bw)
+    
+    # collect results from bandwidth selection
+    results = bw_select(curr.Bw)
+    h.idx = results$h.o.idx; h.value = results$h.optimal
+    cverr = results$err; min.err = min(cverr)
+    
+    # narrow down the searching scope
+    radius = min(h.idx, N - h.idx + 1)
+    radius = as.integer(radius / 2)
+    ub.idx = h.idx + radius; lb.idx = h.idx - radius
+    
+    # record display values (for now)
+    Bw = c(Bw, curr.Bw[- (lb.idx:ub.idx)])
+    cv.err = c(cv.err, cverr[-(lb.idx:ub.idx)])
+    
+    # adjust searching scope
+    curr.lb = curr.Bw[lb.idx]; curr.ub = curr.Bw[ub.idx]
+    curr.prec = curr.prec / 2
+    
+    if((curr.lb <= precision) || (radius == 0)){
+      
+      Bw = c(Bw, curr.Bw[(lb.idx:ub.idx)])
+      cv.err = c(cv.err, cverr[(lb.idx:ub.idx)])
+      
+      break
+    }
+  }
+  
+  plot(Bw, cv.err, main = "LOOCV error v.s. Bandwidths")
+  abline(h = min.err, col = "blue"); abline(v = h.value, col = "blue")
+  
+  return(h.value)
+  
+}
+
+bw = bw_solver(0, 8, .01)
+```
+
+![](exercise03_R_files/figure-markdown_github/unnamed-chunk-4-1.jpeg)
+
+```r
+y.hat = Hat.func(bw) %*% data.y
+resid = data.y - y.hat
+
+plot(data.x, resid, main = "residual plot")
+```
+![](exercise03_R_files/figure-markdown_github/unnamed-chunk-4-2.jpeg)
+
+
 The optimal bandwidth turned out to be around 6.87

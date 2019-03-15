@@ -204,3 +204,10 @@ h_solver(x.tr, y.oo.tr, x.te, y.oo.te, grp = "oo")
 ``` r
 par(mfrow=c(1,1))
 ```
+
+### Local polynomial regression
+
+$\Omega = \left[\begin{array}{cccc}
+  w_1(\textbf{x}_1) & w_2(\textbf{x}_1) & \cdots & w_n(\textbf{x}_n)
+  \end{array}
+  \right]$

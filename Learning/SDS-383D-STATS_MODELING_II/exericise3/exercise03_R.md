@@ -212,9 +212,10 @@ par(mfrow=c(1,1))
 
 ### Local polynomial regression -- part (E) & (F) & (G)
 
-*(E)* The problem requires us to choose the best bandwidth *h* (from a set of proposals) of local linear estimator using LOOCV. By what we already know about local linear estimator and leave-one-out cross validation, we need 4 steps to make that happen:
+*(E)* & *(F)* The problem requires us to choose the best bandwidth *h* (from a set of proposals) of local linear estimator using LOOCV. By what we already know about local linear estimator and leave-one-out cross validation, we need 4 steps to make that happen:
 
 1.  calculating the weight matrix *Ω* such that
+![](exercise03_R_files/figure-markdown_github/my-omega.png)
 2.  normalize *Ω* by row (get the Hat Matrix *H*),
 3.  calculate LOOCV,
 4.  find the bandwidth *h* that gives minimal LOOCV error.

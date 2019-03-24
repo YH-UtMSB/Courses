@@ -71,5 +71,7 @@ for (b in B) {
   
 }
   
-  ```
-  
+```
+
+![](Gaussian-Process_files/figure-markdown_github/expsq_b.png)
+ 

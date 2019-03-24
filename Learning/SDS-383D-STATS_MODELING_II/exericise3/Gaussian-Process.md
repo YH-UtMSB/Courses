@@ -75,3 +75,4 @@ for (b in B) {
 
 ![](Gaussian-Process_files/figure-markdown_github/expsq_b.png)
  
+It seems that a larger *b* will give a more smooth Gaussian Process. I guess the reason is that as *b* increases, the covariance between *f(x<sup>1</>)* and  

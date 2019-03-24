@@ -8,4 +8,7 @@
   2. See what happens if tau_2 squared equals zero.  
   
   3. Replace covariance function with  
-  ![](Gaussian-Process_files/figure-markdown_github/cm52.PNG)
+  ![](Gaussian-Process_files/figure-markdown_github/cm52.PNG)  
+  and repeat steps in 1.
+  
+  

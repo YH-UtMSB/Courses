@@ -74,7 +74,7 @@ for (b in B) {
 
 ![](Gaussian-Process_files/figure-markdown_github/expsq_b.png)
  
-It seems that a larger *b* will give a more smooth Gaussian Process. I guess the reason is that as *b* increases, the covariance between *f(x<sub>i</sub>)* and *f(x<sub>j</sub>)* grows as well, so images of *x*'s which are close to each other will not be faraway from each other. For this reason, I assume a bigger *&tau,<sub>1</sub>* can also smooth the Gaussian Process.
+It seems that a larger *b* will give a more smooth Gaussian Process. I guess the reason is that as *b* increases, the covariance between *f(x<sub>i</sub>)* and *f(x<sub>j</sub>)* grows as well, so images of *x*'s which are close to each other will not be faraway from each other. For this reason, I assume a bigger &tau,<sub>1</sub> can also smooth the Gaussian Process.
 
 
 

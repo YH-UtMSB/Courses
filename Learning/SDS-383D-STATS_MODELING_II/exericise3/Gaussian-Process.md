@@ -74,7 +74,61 @@ for (b in B) {
 
 ![](Gaussian-Process_files/figure-markdown_github/expsq_b.png)
  
-It seems that a larger *b* will give a more smooth Gaussian Process. I guess the reason is that as *b* increases, the covariance between *f(x<sub>i</sub>)* and *f(x<sub>j</sub>)* grows as well, so images of *x*'s which are close to each other will not be faraway from each other. For this reason, I assume a bigger &tau,<sub>1</sub> can also smooth the Gaussian Process.
+It seems that a larger *b* will give a more smooth Gaussian Process. I guess the reason is that as *b* increases, the covariance between *f(x<sub>i</sub>)* and *f(x<sub>j</sub>)* grows as well, so images of *x*'s which are close to each other will not be faraway from each other. 
+
+Next, let's see the effct of tau[1].  
+
+```r
+# start from kappa[2] = 1e-6, kappa[1] = c(.001, .01, .1, 1) and b = 0.05
+T1 = c(.001, .01, .01, 1)
+mu = rep(0, times = n)
+
+par(mfrow=c(2,2))
+for (t1 in T1) {
+  
+  # define hyperparameters
+  kappa = c(.05, t1, 1e-6)
+  
+  # compute covariance matrix
+  C = CSE(x, x, kappa)
+  
+  # sample (simulate) Gaussian Process
+  f = mvrnorm(1, mu, C)
+  
+  plot(x, f, type = "l", pch = ".", main = paste0("ExpSq, tau1 = ", t1))
+  
+}
+
+```
+![](Gaussian-Process_files/figure-markdown_github/expsq_t1.png)
+
+From the above results, tau[1] looks like controls the magnitude of variation in the Gaussian Process. When tau[1] is around 0, although covariance between *f(x)*'s are small, the variances of them are small as well, meaning that they do not usually move away from the mean, so the "magnitude" is small.
+
+Finally, let's go back to the first experiment but set tau[2] = 0.
+
+```r
+# start from kappa[2] = 0, kappa[1] = .1 and b = c(0.005, 0.05, 0.2, 1)
+B = c(.005, .05, .2, 1)
+mu = rep(0, times = n)
+
+par(mfrow=c(2,2))
+for (b in B) {
+  
+  # define hyperparameters
+  kappa = c(b, .1, 1e-6)
+  
+  # compute covariance matrix
+  C = CSE(x, x, kappa)
+  
+  # sample (simulate) Gaussian Process
+  f = mvrnorm(1, mu, C)
+  
+  plot(x, f, type = "l", pch = ".", main = paste0("ExpSq, b = ", b))
+    
+}
+
+```
+
 
 
 

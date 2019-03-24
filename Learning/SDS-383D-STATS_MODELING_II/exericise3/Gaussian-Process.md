@@ -11,4 +11,65 @@
   ![](Gaussian-Process_files/figure-markdown_github/cm52.PNG)  
   and repeat steps in 1.
   
+  ```r
+  
+  library(MASS)
+library(Rcpp)
+
+# Define covariance matrices
+
+# Squared Exponential
+# Inputs
+# kappa: (range b, variance, nugget)
+#		a set of covariance parameters for the squared exponential covariance function
+# x: n1-vector of 1D spatial locations
+# y: n2-vector of 1D spatial locations
+#
+# Returns
+# C, a matrix of dimension (n1 x n2)
+# C(i,j) is the covariance between f(x1[i]) and f(x2[j])
+# where f is a Gaussian process parametrized by kappa
+cppFunction('
+            NumericMatrix CSE(NumericVector x, NumericVector y, NumericVector kappa) {
+            double arg, distance2;
+            int n1 = x.size();
+            int n2 = y.size();
+            NumericMatrix C(n1,n2);
+            for(int i = 0; i < n1; i++) {
+            for(int j=0; j < n2; j++) {
+            arg = (x[i] - y[j])/kappa[0];
+            distance2 = arg*arg;
+            C(i,j) = kappa[1]*exp(-0.5*distance2);
+            if(arg == 0.0) C(i,j) += kappa[2];
+            }
+            }
+            return C;
+            }
+            ')
+
+n = 1000
+x = seq(0, 1, length.out = n)
+
+# start from kappa[2] = 1e-6, kappa[1] = .1 and b = c(0.005, 0.05, 0.2, 1)
+B = c(.005, .05, .2, 1)
+mu = rep(0, times = n)
+
+par(mfrow=c(2,2))
+for (b in B) {
+  
+  # define hyperparameters
+  kappa = c(b, .1, 1e-6)
+  
+  # compute covariance matrix
+  C = CSE(x, x, kappa)
+  
+  # sample (simulate) Gaussian Process
+  f = mvrnorm(1, mu, C)
+  
+  plot(x, f, type = "l", pch = ".", main = paste0("ExpSq, b = ", b))
+  
+  
+}
+  
+  ```
   

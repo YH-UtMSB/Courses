@@ -198,7 +198,6 @@ for (b in B) {
 ```
 ![](Gaussian-Process_files/figure-markdown_github/matern52_b.png)
 
-
-
+The results are indeed less smooth than Squared Exponential covariance function.
 
 

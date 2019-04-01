@@ -30,3 +30,4 @@ plot(schoolsizes, schoolmeans, pch="+")
 points(maxmean.size, maxmean)
 
 ```
+![](figure/ex04-1-1-fig1.jpg)

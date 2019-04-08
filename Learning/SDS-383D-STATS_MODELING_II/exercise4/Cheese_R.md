@@ -38,7 +38,7 @@ N1 = sum(D)
 
 
 # initialize parameters
-# sigerr := sigma
+# sigerr := sigma, fg := 1 / (g^2)
 alp.0 = 10; alp.1 = 0; eta.2 = eta.3 = 0; mu = -2; sigerr = fg = 1
 phi.2 = rep(0, n); phi.3 = rep(0, n)
 

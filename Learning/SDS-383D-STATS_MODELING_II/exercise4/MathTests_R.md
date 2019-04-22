@@ -1,6 +1,9 @@
 ## Math Tests
 
-#### Half finished
+#### Part I
+
+This part is all about examining the phenomenon that the extreme school-level averages tend to be at schools where fewer students were sampled.
+
 
 ```r
 # mathtest problem

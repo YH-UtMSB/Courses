@@ -2,7 +2,7 @@
 
 #### Part I
 
-This part is all about examining the phenomenon that the extreme school-level averages tend to be at schools where fewer students were sampled.
+This part is all about examining the phenomenon that the extreme school-level averages tend to be at schools where fewer students were sampled. To visualize such a phenomenon, I plot "school_mean" against "school_size" and circled the most extreme "school_mean", it's true that the maximum of shool level mean score is found at the school that only has a sample size
 
 
 ```r

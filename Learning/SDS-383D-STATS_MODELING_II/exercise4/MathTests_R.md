@@ -39,6 +39,10 @@ points(maxmean.size, maxmean)
 ```
 ![](fig/ex04-1-1-fig1.jpeg)
 
+#### Part I
+
+In this part I use Gibbs sampling to obtain the estimated parameters in the hierarchical mdoel. The math for establishing gibbs samplers are elaborated [here](math/mathtest_gibbs_elaboration.PDF).
+
 ```r
 # Problem 2 -- fit the hierarchical model via gibbs sampling.
 

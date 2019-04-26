@@ -1,5 +1,6 @@
 ## Cheese-elastic Case
 
+### Part I: data preparation
 Package requirment:
 
 ```r
@@ -52,7 +53,7 @@ D = matrix(D, nrow = n, byrow = TRUE)
 
 ```
 
-Since "rectangulating" y's, x's and D's in the evaluation set into matrices makes life a lot easier, I append 0's to the short rows to make them as long as the longest.  Basically this is what I intend to do next:
+Since "rectangulating" y's, x's and D's in the evaluation set into matrices makes life a lot easier, I append 0's to the short rows to make them as long as the longest.  Basically this is what I intend to do next for the eval set:
 
 ```r
 # data11, data12, data13, data14, data15, 0
@@ -60,4 +61,96 @@ Since "rectangulating" y's, x's and D's in the evaluation set into matrices make
 # data32, data32, data33, 0,      0,      0
 # data41, data42, data43, data44, data45, data46
 # data51, data52, data53, data54, 0,      0
+```
+
+### Part II: fit the Bayesian linear model
+
+```r
+
+# Obtain initial value of beta.0i, beta.1i, beta.2i and beta.3i
+# Meanwhile, estimate (mu0, v0^2), (mu1, v1^2), (mu2, v2^2) and (mu3, v3^2)
+
+hlm3 = lmer(log(vol) ~ (1 + log(price) + disp + log(price):disp | store), data=cheese.tr)
+
+# summary(hlm3)
+# coef(hlm3)
+
+# Extract the coefficients
+beta.hat = coef(hlm3)$store[,c(4,2,1,3)]
+beta.hat = as.matrix(beta.hat)
+mu = colMeans(beta.hat)
+sd = apply(beta.hat, 2, sd)
+
+
+# Initialize parameters
+beta.0 = beta.hat[,1]
+beta.1 = beta.hat[,2]
+beta.2 = beta.hat[,3]
+beta.3 = beta.hat[,4]
+lambda = 1
+
+Beta.0 = Beta.1 = Beta.2 = Beta.3 = Lambda = c()
+
+
+
+# Running the Markov chain for Ite times
+Ite = 5000
+st = Ite - 499; ed = Ite
+SqErr = c()
+
+for (iter in 1:Ite) {
+  
+  # Sample beta.0 from its full conditional then record.
+  # 'mker' stands for "mean kernel", meaning the most convoluted part in computing mean.
+  r0 = 1 / (1/(sd[1]^2) + m * lambda)
+  mker0 = y - beta.1 * D - beta.2 * x - beta.3 * D * x
+  phi0 = r0 * (
+    lambda * apply(mker0, 1, sum) + mu[1] / (sd[1]^2)
+  )
+  beta.0 = rnorm(n, phi0, r0)
+  Beta.0 = cbind(Beta.0, beta.0)
+  
+  
+  # Sample beta.1 from its full cond. then record.
+  r1 = 1 / (1/(sd[2]^2) + lambda * apply(D, 1, sum))
+  mker1 = D * (y - beta.0 - (beta.2 + beta.3) * x)
+  phi1 = r1 * (
+    lambda * apply(mker1, 1, sum) + mu[2] / (sd[2]^2)
+  )
+  beta.1 = rnorm(n, phi1, r1)
+  Beta.1 = cbind(Beta.1, beta.1)
+  
+  
+  # Sample beta.2 from its full cond. then record.
+  r2 = 1 / (1/(sd[3]^2) + lambda * apply(x^2, 1, sum))
+  mker2 = x * (y - beta.0 - beta.1 * D - beta.3 * D * x)
+  phi2 = r2 * (
+    lambda * apply(mker2, 1, sum) + mu[3] / (sd[3]^2)
+  )
+  beta.2 = rnorm(n, phi2, r2)
+  Beta.2 = cbind(Beta.2, beta.2)
+  
+  
+  # Sample beta.3 from its full cond. then record.
+  r3 = 1 / (1/(sd[4]^2) + lambda * apply(D * x^2, 1, sum))
+  mker3 = D * x * (y - beta.0 - beta.1 - beta.2 * x)
+  phi3 = r3 * (
+    lambda * apply(mker3, 1, sum) + mu[4] / (sd[4]^2)
+  )
+  beta.3 = rnorm(n, phi3, r3)
+  Beta.3 = cbind(Beta.3, beta.3)
+  
+  
+  # Sample lambda from its full cond. then record.
+  lbd.a = (m * n + 1) / 2
+  lbd.b = 0.5 * sum((y - beta.0 - beta.1 * D - beta.2 * x - beta.3 * D * x)^2) + 0.5 
+  lambda = rgamma(1, lbd.a, lbd.b)
+  Lambda = c(Lambda, lambda)
+  
+  if(iter >= st){
+    y_te = log()
+  }
+  
+}
+
 ```

@@ -204,3 +204,106 @@ According to the histograms, the display and interaction between display & log(p
 ### Part III Comparison: bayesian v.s. 16 random effects models
 
 
+```r
+effects = c("1", "disp", "log(price)", "log(price):disp")
+
+all_sqer = function(effects){
+  
+  # "Com" stands for "combinations",
+  # its rows host all the k_choose_t possible t-element tuples.
+  Com = c()
+  num_elem = 0
+  OLSErr = c()
+  k = length(effects)
+  
+  while(num_elem <= k){
+    
+    if(length(Com) == 0){
+      
+      randef = effects
+      model = paste0("log(vol) ~ (", paste(randef, collapse = " + "), " | store)")
+      hlm = lmer(model, data = cheese.tr)
+      y_ev = predict(hlm, newdata = cheese.ev)
+      sqer = sum((log(cheese.ev$vol) - y_ev)^2)
+      OLSErr = c(OLSErr, sqer)
+      
+      Com = matrix(c(1:k), nrow = k, byrow = TRUE)
+    }
+    else{
+      N = dim(Com)[1]
+      for (i in 1:N) {
+        
+        randef = effects[Com[i,]]
+        fixeff = effects[-Com[i,]]
+        
+        model = paste0(
+          "log(vol) ~ ",
+          paste(fixeff, collapse = " + "),
+          " + (",
+          paste(randef, collapse = " + "),
+          " | store)"
+        )
+        
+        hlm = lmer(model, data = cheese.tr)
+        y_ev = predict(hlm, newdata = cheese.ev)
+        sqer = sum((log(cheese.ev$vol) - y_ev)^2)
+        
+        OLSErr = c(OLSErr, sqer)
+      }
+      
+      # num_expd is the number of t+1-element tuple prefixed by the current tuple
+      num_expd = k - Com[,num_elem]
+      num_derive = sum(num_expd)
+      
+      # replicate each prefix "num_prod" times, making up the head of t+1-element tuples
+      head = unlist(lapply(c(1:N), function(t) cbind(rep(Com[t,], times = num_expd[t]))))
+      head = matrix(head, nrow = num_derive, byrow = TRUE)
+      
+      num_expd = num_expd[which(num_expd != 0)]
+      # the collection of "last element"s 
+      appender = unlist(lapply(num_expd, function(ee) cbind(c(1:ee))))
+      
+      
+      length(appender) == num_derive
+      
+      if(num_derive > 0){
+        Com = cbind(head, head[,num_elem] + appender)
+      }
+      else{}
+    }
+    
+    num_elem = num_elem + 1
+    
+  }
+  
+  names(OLSErr) = rep("ols", length(OLSErr))
+  
+  return(OLSErr)
+  
+}
+
+
+# The squared error of mlps
+mlr_err = all_sqer(effects)
+
+
+# The squared error of avg bayesian model
+beta0 = apply(Beta.0, 1, mean)
+beta1 = apply(Beta.1, 1, mean)
+beta2 = apply(Beta.2, 1, mean)
+beta3 = apply(Beta.3, 1, mean)
+
+y_ev = beta0 + beta1 * D_te + beta2 * x_te + beta3 * D_te * x_te
+sqer = sum((y_te - y_ev)^2 * mask_te)
+
+bayes_err = c(sqer, min(SqErr), max(SqErr), mean(SqErr))
+names(bayes_err) = c("err.avg", "min.err", "max.err", "avg.err")
+
+sort(c(mlr_err, bayes_err))
+
+
+```
+
+![](fig/compare_bayes_mlr.PNG)
+
+

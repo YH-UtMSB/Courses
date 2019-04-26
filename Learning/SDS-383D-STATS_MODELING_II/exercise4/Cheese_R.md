@@ -11,7 +11,7 @@ library(readr)
 rm(list=ls())
 ```
 
-To start with, I fit a Bayesian linear model as well as several MLR models through OLS. I expect the Bayesian performs at least among the top 30% of the models fitted in the frequentist fashion. So I split the cheese data set into a bigger training half and a smaller evaluation half. By inspecting the data size for each store, I fix the training sample size for each store at 50. Namely, I gather the first 50 data for each store to form the training set, and what remain become the eval set.
+To start with, I fit a Bayesian linear model as well as several MLR models through OLS. I expect the Bayesian performs at least among the top 30% of the models fitted in the frequentist fashion. So I split the cheese data set into a bigger training half and a smaller evaluation half. By inspecting the data size for each store, I fix the training sample size for each store at 50. Namely, I gather the first 50 data for each store to form the training set, and what remain make up the eval set.
 
 ```r
 
@@ -52,8 +52,12 @@ D = matrix(D, nrow = n, byrow = TRUE)
 
 ```
 
-Since "rectangulating" y's, x's and D's in the evaluation into matrices makes life a lot easier, I append 0's to the short rows to make them as long as the longest.  
+Since "rectangulating" y's, x's and D's in the evaluation set into matrices makes life a lot easier, I append 0's to the short rows to make them as long as the longest.  Basically this is what I intend to do next:
 
 ```r
-
+# data11, data12, data13, data14, data15, 0
+# data21, data22, 0,      0,      0,      0
+# data32, data32, data33, 0,      0,      0
+# data41, data42, data43, data44, data45, data46
+# data51, data52, data53, data54, 0,      0
 ```

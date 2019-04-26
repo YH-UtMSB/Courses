@@ -67,7 +67,7 @@ Since "rectangulating" y's, x's and D's in the evaluation set into matrices make
 # While it's a bit difficult to "rectangulate" the test data
 N_te = as.numeric(summary(cheese.ev$store))
 maxsize = max(N_te)
-y_te = x_te = D_te = rep(0, maxsize * n)
+y_te = x_te = D_te = mask_te = rep(0, maxsize * n)
 
 # "inc" is the current (starting index -1) of each store's eval data
 inc = c(0, cumsum(N_te)[-n])
@@ -83,10 +83,12 @@ critic_idx = c(1:length(idx.sft)) + idx.sft
 y_te[critic_idx] = log(cheese.ev$vol)
 x_te[critic_idx] = log(cheese.ev$price)
 D_te[critic_idx] = cheese.ev$disp
+mask_te[critic_idx] = rep(1, length(critic_idx))
 
 y_te = matrix(y_te, nrow = n, byrow = TRUE)
 x_te = matrix(x_te, nrow = n, byrow = TRUE)
 D_te = matrix(D_te, nrow = n, byrow = TRUE)
+mask_te = matrix(mask_te, nrow = n, byrow = TRUE)
 
 ```
 
@@ -175,9 +177,24 @@ for (iter in 1:Ite) {
   Lambda = c(Lambda, lambda)
   
   if(iter >= st){
-    y_te = log()
+    y_ev = beta.0 + beta.1 * D_te + beta.2 * x_te + beta.3 * D_te * x_te
+    sqer = sum((y_te - y_ev)^2 * mask_te)
+    SqErr = c(SqErr, sqer)
   }
   
 }
 
+
+# Collect burnt-in samples.
+
+Beta.0 = Beta.0[,st:ed]
+Beta.1 = Beta.1[,st:ed]
+Beta.2 = Beta.2[,st:ed]
+Beta.3 = Beta.3[,st:ed]
+
+par(mfrow=c(2,2))
+hist(Beta.0); hist(Beta.1); hist(Beta.2); hist(Beta.3)
+par(mfrow = c(1,1))
+
 ```
+![](fig/hist_beta.png)

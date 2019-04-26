@@ -10,7 +10,7 @@ library(readr)
 rm(list=ls())
 ```
 
-To start with, I fit a Bayesian linear model as well as several MLR models through OLS. I expect the Bayesian performs at least among the top 30% of the models fitted in the frequentist fashion. So I split the cheese data set into a bigger training half and a smaller evaluation half. By inspecting the data size for each store, I fix the training sample size for each store at 50. Namely, I gather the first 50 data for each store to form the training set, and what remain make up the eval set.
+To start with, I fit a Bayesian linear model as well as several MLR models through OLS. I expect the Bayesian performs at least among the top 50% of the models fitted in the frequentist fashion. So I split the cheese data set into a bigger training half and a smaller evaluation half. By inspecting the data size for each store, I fix the training sample size for each store at 50. Namely, I gather the first 50 data for each store to form the training set, and what remain make up the eval set.
 
 ```r
 
@@ -283,7 +283,7 @@ all_sqer = function(effects){
 }
 
 
-# The squared error of mlps
+# The squared error of mlrs
 mlr_err = all_sqer(effects)
 
 
@@ -306,4 +306,4 @@ sort(c(mlr_err, bayes_err))
 
 ![](fig/compare_bayes_mlr.PNG)
 
-
+From the above results we can find that even though I'm using the simplest bayesian hierarchy, its best performance is among the top of those of MLR's. Moreover, both the average error and error of averaged model are better than half of the choices of MLR. So using bayesian hierarchical model is a good idea when you try to have some satisfactory results while not wanting to exhaust all the possible combinations of random effects.

@@ -203,6 +203,7 @@ According to the histograms, the display and interaction between display & log(p
 
 ### Part III Comparison: bayesian v.s. 16 random effects models
 
+The way I regress 16 random effects models is via dynamic programming. A toy example of dynamic programming is shown [here](math/all_comb.md).
 
 ```r
 effects = c("1", "disp", "log(price)", "log(price):disp")

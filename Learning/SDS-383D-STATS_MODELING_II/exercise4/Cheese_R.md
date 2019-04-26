@@ -5,8 +5,6 @@ Package requirment:
 
 ```r
 library(lme4)
-library(tidyverse)
-library(lattice)
 library(readr)
 
 rm(list=ls())

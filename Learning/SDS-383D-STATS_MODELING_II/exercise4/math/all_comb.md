@@ -51,6 +51,7 @@ all_combin = function(k){
   
 }
 
+# See all combinations when k = 4
 all_combin(4)
 ```
 

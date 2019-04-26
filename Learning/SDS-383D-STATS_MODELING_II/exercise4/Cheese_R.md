@@ -62,6 +62,33 @@ Since "rectangulating" y's, x's and D's in the evaluation set into matrices make
 # data41, data42, data43, data44, data45, data46
 # data51, data52, data53, data54, 0,      0
 ```
+```r
+
+# While it's a bit difficult to "rectangulate" the test data
+N_te = as.numeric(summary(cheese.ev$store))
+maxsize = max(N_te)
+y_te = x_te = D_te = rep(0, maxsize * n)
+
+# "inc" is the current (starting index -1) of each store's eval data
+inc = c(0, cumsum(N_te)[-n])
+# "stpt_te" is the ideal (starting index -1) of each store's eval data
+stpt_te = maxsize * c(0:(n-1))
+# So we have the store level shift in index
+shifts = stpt_te - inc
+# From there we can get sample level shift in index
+idx.sft = unlist(lapply(c(1:n), function(k) cbind(rep(shifts[k], times = N_te[k])))) 
+
+critic_idx = c(1:length(idx.sft)) + idx.sft
+
+y_te[critic_idx] = log(cheese.ev$vol)
+x_te[critic_idx] = log(cheese.ev$price)
+D_te[critic_idx] = cheese.ev$disp
+
+y_te = matrix(y_te, nrow = n, byrow = TRUE)
+x_te = matrix(x_te, nrow = n, byrow = TRUE)
+D_te = matrix(D_te, nrow = n, byrow = TRUE)
+
+```
 
 ### Part II: fit the Bayesian linear model
 

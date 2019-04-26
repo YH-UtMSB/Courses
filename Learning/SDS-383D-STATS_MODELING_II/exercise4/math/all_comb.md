@@ -2,7 +2,7 @@ All combinations
 ================
 Yilin He
 
-#### It is a dynamic programming example to try all possible combinations of digits from 1 to k.
+#### It is a dynamic programming example to display all possible combinations of digits from 1 to k.
 
 ``` r
 all_combin = function(k){

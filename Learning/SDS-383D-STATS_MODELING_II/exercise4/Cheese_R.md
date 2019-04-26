@@ -202,3 +202,7 @@ par(mfrow = c(1,1))
 ![](fig/hist_beta.png)
 
 According to the histograms, the display and interaction between display & log(price) seem to be fix effects.
+
+### Part III Comparison: bayesian v.s. 16 random effects models
+
+

@@ -41,7 +41,7 @@ points(maxmean.size, maxmean)
 
 #### Part I
 
-In this part I use Gibbs sampling to obtain the estimated parameters in the hierarchical mdoel. The math for establishing gibbs samplers are elaborated [here](math/mathtest_gibbs_elaboration.PDF).
+In this part I use Gibbs sampling to obtain the estimated parameters in the hierarchical mdoel. The math for establishing gibbs samplers is elaborated [here](math/mathtest_gibbs_elaboration.PDF). Let's first define the samplers as below.
 
 ```r
 # Problem 2 -- fit the hierarchical model via gibbs sampling.
@@ -153,8 +153,11 @@ lbd_splr = function(eta, phi, lambda, mu, xi){
   return(new_samp)
   
 }
+```
 
+Next, run the markov chain to obtain parameters from their full conditionals.
 
+```r
 # Initialize parameters
 mu = mean(mathtest$mathscore)
 eta = 0
@@ -190,19 +193,21 @@ for (iter in 1:Ite) {
   Lambda = c(Lambda, lambda)
   
 }
+```
 
+Samples used for parameter estimation will be collected after burnt-in.
 
+```r
 # Extract burnt-in samples
 st = Ite - 1000 + 1; ed = Ite
 
 Mu = Mu[st:ed]; Eta = Eta[st:ed]; Phi = Phi[, st:ed]
 Xi = Xi[st:ed]; Lambda = Lambda[st:ed]
 
-par(mfrow = c(2,2))
-plot(Mu, type = "l"); plot(Eta, type = "l")
-plot(Xi, type = "l"); plot(Lambda, type = "l")
-par(mfrow = c(1,1))
-
+# par(mfrow = c(2,2))
+# plot(Mu, type = "l"); plot(Eta, type = "l")
+# plot(Xi, type = "l"); plot(Lambda, type = "l")
+# par(mfrow = c(1,1))
 
 # Finally, obtain the estimated parameters of the hierarchical model.
 Theta = Mu + Eta * Lambda^(-0.5) * t(Phi)
@@ -218,3 +223,5 @@ names(params) = c("mu.hat", "lambda.hat", "tau.hat")
 params
 
 ```
+
+![](fig/params_mathtest.PNG)

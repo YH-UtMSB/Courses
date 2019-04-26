@@ -39,7 +39,7 @@ points(maxmean.size, maxmean)
 ```
 ![](fig/ex04-1-1-fig1.jpeg)
 
-#### Part I
+#### Part II
 
 In this part I use Gibbs sampling to obtain the estimated parameters in the hierarchical mdoel. The math for establishing gibbs samplers is elaborated [here](math/mathtest_gibbs_elaboration.PDF). Let's first define the samplers as below.
 
@@ -225,3 +225,18 @@ params
 ```
 
 ![](fig/params_mathtest.PNG)
+
+
+#### Part III
+
+At last, let's visualize the relationship between sample size and shrinkage.
+
+```r
+# Problem 3 -- the relationship between shrinkage and sample size.
+
+kappa = abs((yi.bar - theta.hat) / yi.bar)
+plot(ni, kappa, xlab = "schoolsize", ylab = "shrinkage")
+
+```
+![](fig/shrk_vs_size.jpeg)
+

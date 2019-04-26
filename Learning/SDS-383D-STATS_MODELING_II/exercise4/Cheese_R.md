@@ -94,6 +94,8 @@ mask_te = matrix(mask_te, nrow = n, byrow = TRUE)
 
 ### Part II: fit the Bayesian linear model
 
+I applied [an easy version of Bayesian hierarchical model](math/cheese_soln.PDF).
+
 ```r
 
 # Obtain initial value of beta.0i, beta.1i, beta.2i and beta.3i
@@ -198,3 +200,5 @@ par(mfrow = c(1,1))
 
 ```
 ![](fig/hist_beta.png)
+
+According to the histograms, the display and interaction between display & log(price) seem to be fix effects.
